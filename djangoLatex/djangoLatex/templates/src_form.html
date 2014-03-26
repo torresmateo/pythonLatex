@@ -1,0 +1,12 @@
+<html>
+<head>
+    <title>Search</title>
+</head>
+<body>
+    <form action="/search/" method="post">
+	  {% csrf_token %}
+        <textarea name="src"></textarea>
+        <input type="submit" value="GeneratePDF">
+    </form>
+</body>
+</html>
