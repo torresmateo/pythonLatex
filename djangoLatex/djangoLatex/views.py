@@ -10,7 +10,11 @@ import LatexGenerator
 import os
 
 def src_form(request):
-	return render(request, 'src_form.html')
+	os.chdir(settings.PROJECT_PATH)
+	a = open("hola.txt","w")
+	a.write("hola")
+	a.close()
+	return render(request, 'src_form.html',{'hola':settings.PROJECT_PATH})
 
 def submit(request):
 	errors = []

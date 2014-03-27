@@ -3,8 +3,10 @@
     <title>Search</title>
 </head>
 <body>
+
+	{{ hola }}
     <form action="/search/" method="post">
-	  {% csrf_token %}
+	{% csrf_token %}
         <textarea name="src"></textarea>
         <input type="submit" value="GeneratePDF">
     </form>
