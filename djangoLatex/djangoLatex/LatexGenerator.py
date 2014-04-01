@@ -16,7 +16,7 @@ class LatexGenerator:
 		self.filename = self.basename + ".tex"
 		self.file = open(self.filename, "w")
 		self.closedFile = False
-		self.file.write(src)
+		self.file.write(src.encode('utf8'))
 
 	def closeFile(self):
 		self.file.close()
@@ -24,5 +24,7 @@ class LatexGenerator:
 	def generatePDF(self):
 		if not self.closedFile:
 			self.closeFile()
-		os.system("pdflatex " + self.filename + " -aux-directory=latex -output-directory=latex > hola.asd")
+		os.system("pdflatex " + self.filename)
+		os.system("pdflatex " + self.filename)
+		os.system("pdflatex " + self.filename)
 		return self.basename + ".pdf"
