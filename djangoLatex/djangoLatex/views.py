@@ -20,27 +20,53 @@ def src_form(request):
 
 @csrf_exempt
 def submit(request):
+	noPrefix = onlySrc = False
 	os.chdir(settings.PROJECT_PATH)
 	errors = []
 	if request.method == 'POST':
-	
+		if not request.POST.get('prefijo', ''):
+			noPrefix = True
 		if not request.POST.get('src', ''):
 			errors.append('el código fuente no puede estar vacío.')
+		if not request.POST.get('data',''):
+			onlySrc = True
 		if not errors:
-			datos = json.loads(unicode(request.POST['data']))
-			t = template.Template(unicode(json.loads(request.POST['src'])))
-			c = template.Context(datos)
+			if onlySrc:
+				source = unicode(json.loads(request.POST['src']))
+			else:
+				datos = json.loads(unicode(request.POST['data']))
+				t = template.Template(unicode(json.loads(request.POST['src'])))
+				c = template.Context(datos)
+				source = unicode(t.render(c))
+			if noPrefix:
+				prefix = 'PREFIJO_DEFAULT_'
+			else:
+				prefix = unicode(json.loads(request.POST['prefijo']))
 			savedPath = os.getcwd()
 			os.chdir(settings.PROJECT_PATH)
-			lg = LatexGenerator.LatexGenerator(unicode(t.render(c)),datetime.datetime.now())
+			lg = LatexGenerator.LatexGenerator(source, prefix, datetime.datetime.now())
 			response = HttpResponseRedirect('/pdf/' + lg.generatePDF())
-			os.chdir(settings.PROJECT_PATH)
+			os.chdir(savedPath)
 			return response
 	return render(request, 'src_form.html',{'errors': errors})
 
 def pdf_test(request,filename):
-	pdf = open(settings.PROJECT_PATH + filename,'r')
-	response  = HttpResponse(pdf.read(), content_type='application/pdf')
-	response['Content-Disposition'] = 'inline; filename=asdf.pdf'
+	if(os.path.isfile(settings.PROJECT_PATH + filename)):
+		pdf = open(settings.PROJECT_PATH + filename,'r')
+		response  = HttpResponse(pdf.read(), content_type='application/pdf')
+		response['Content-Disposition'] = 'inline; filename=asdf.pdf'
+		pdf.close()
+	else:
+		basename, extension = os.path.splitext(settings.PROJECT_PATH + filename)
+		log = open(basename+'.log', 'r')
+		src = open(basename+'.tex', 'r')
+		responseString = '<br><pre>' + log.read() + '</pre>'
+		responseString += u'<h3>código fuente</h3><br><pre>' + src.read().decode('utf8') + '</pre>'
+		response = HttpResponse(
+			u"<h3>Error de compilación Latex para el archivo <div style='color=red;'>" + basename + "</div></h3> " + responseString,
+			content_type='text/html; charset=utf-8'
+		)
+		log.close()
+		src.close()
 	return response
-	pdf.closed
+		

@@ -9,10 +9,12 @@ import time
 class LatexGenerator:
 	def __init__(self, 
 				 src,
-				 date = datetime.datetime.now() 
+				 prefix, 
+				 date = datetime.datetime.now()
 	):
+		self.prefix = prefix
 		self.date = date
-		self.basename = date.strftime("%Y-%m-%d,%H_%M_%S")
+		self.basename = prefix + date.strftime("%Y-%m-%d,%H_%M_%S")
 		self.filename = self.basename + ".tex"
 		self.file = open(self.filename, "w")
 		self.closedFile = False
