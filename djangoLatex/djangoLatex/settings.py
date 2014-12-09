@@ -1,6 +1,8 @@
 # Django settings for djangoLatex project.
 import os.path
 
+CBAFLOW_MANUALES_REPO_URL = "http://ambere:cb@L@T3X@repositorio.cba.com.py/desarrollo/hg/cbaflow_manuales"
+
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 DEBUG = True

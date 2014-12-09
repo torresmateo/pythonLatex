@@ -6,3 +6,4 @@
 *.aux
 *.toc
 *.out
+djangoLatex/djangoLatex/cbaflow_manuales/*
