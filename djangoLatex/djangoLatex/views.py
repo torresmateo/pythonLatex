@@ -39,6 +39,9 @@ def submit(request):
 					cbaflow_manuales.generarRolesTex()
 					compile_dir += "/cbaflow_manuales"
 					compilarManual = True 
+				else:
+					errors.append("los datos no son validos")
+					return render(request, 'errors.html',{'errors': errors})
 				source = None
 			elif noData and not noSrc:#solamente tenemos el codigo fuente
 				source = unicode(json.loads(request.POST['src']))
@@ -60,7 +63,7 @@ def submit(request):
 			response = HttpResponseRedirect('/pdf/' + lg.generatePDF())
 			os.chdir(savedPath)
 			return response
-	return render(request, 'src_form.html',{'errors': errors})
+	return render(request, 'errors.html',{'errors': errors})
 
 def pdf_test(request,filename):
 	if(os.path.isfile(settings.PROJECT_PATH + filename)):

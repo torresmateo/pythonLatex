@@ -25,7 +25,7 @@ class CBAFlowManuales:
 		valores_admitidos = set([True, False])
 		datos = json.loads(datosJson)
 		s = set(datos.values())
-		if s == valores_admitidos:
+		if s <= valores_admitidos or s == set([]):
 			self.datos = datos
 			return True
 		return False
